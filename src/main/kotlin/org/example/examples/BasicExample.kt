@@ -3,6 +3,7 @@ package org.example.examples
 import kotlinx.coroutines.runBlocking
 import org.example.mcp.McpClient
 import org.example.mcp.McpConfig
+import org.example.mcp.McpUtils
 
 /**
  * Basic example of using MCP client
@@ -10,11 +11,19 @@ import org.example.mcp.McpConfig
 fun main() = runBlocking {
     println("=== Basic MCP Client Example ===\n")
 
+    // Load API key from local.properties
+    val apiKey = try {
+        McpUtils.requireProperty("local.properties", "CONTEXT7_API_KEY")
+    } catch (e: Exception) {
+        System.err.println("Error: ${e.message}")
+        return@runBlocking
+    }
+
     // Create configuration
     val config = McpConfig(
         url = "https://mcp.context7.com/mcp",
         headers = mapOf(
-            "CONTEXT7_API_KEY" to (System.getenv("CONTEXT7_API_KEY") ?: "YOUR_API_KEY")
+            "CONTEXT7_API_KEY" to apiKey
         )
     )
 
@@ -23,7 +32,6 @@ fun main() = runBlocking {
         config = config,
         clientName = "BasicExample",
         clientVersion = "1.0.0",
-        debug = true
     )
 
     try {

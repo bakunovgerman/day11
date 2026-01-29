@@ -23,7 +23,6 @@ class McpClient(
     private val config: McpConfig,
     private val clientName: String = "KotlinMcpClient",
     private val clientVersion: String = "1.0.0",
-    private val debug: Boolean = false
 ) {
     private val httpClient = HttpClient(CIO) {
         install(ContentNegotiation) {

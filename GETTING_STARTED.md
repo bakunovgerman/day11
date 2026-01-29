@@ -19,8 +19,16 @@ sdk install java 24-open
 
 ### Шаг 2: Установите API ключ
 
+Создайте файл `local.properties` в корне проекта:
+
+```properties
+CONTEXT7_API_KEY=your_api_key_here
+```
+
+Или скопируйте пример:
 ```bash
-export CONTEXT7_API_KEY="your_api_key_here"
+cp local.properties.example local.properties
+# Затем отредактируйте local.properties и добавьте ваш ключ
 ```
 
 Получите ключ на: https://context7.com
@@ -52,9 +60,14 @@ cd /Users/germanbakunov/Desktop/day11/day11
 ### Базовое использование
 
 ```kotlin
+import org.example.mcp.McpUtils
+
+// Загрузить API ключ из local.properties
+val apiKey = McpUtils.requireProperty("local.properties", "CONTEXT7_API_KEY")
+
 val config = McpConfig(
     url = "https://mcp.context7.com/mcp",
-    headers = mapOf("CONTEXT7_API_KEY" to "YOUR_KEY")
+    headers = mapOf("CONTEXT7_API_KEY" to apiKey)
 )
 
 val client = McpClient(config)

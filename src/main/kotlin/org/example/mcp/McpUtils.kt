@@ -6,11 +6,50 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.json.JsonObject
 import org.example.mcp.models.CallToolResult
 import org.example.mcp.models.Tool
+import java.io.File
+import java.util.Properties
 
 /**
  * Utility functions for working with MCP
  */
 object McpUtils {
+    /**
+     * Load properties from a file
+     */
+    fun loadProperties(filename: String): Properties {
+        val properties = Properties()
+        val file = File(filename)
+        
+        if (!file.exists()) {
+            throw IllegalStateException(
+                "Properties file not found: $filename\n" +
+                "Please create '$filename' file with required properties.\n" +
+                "See '${filename}.example' for reference."
+            )
+        }
+        
+        file.inputStream().use { properties.load(it) }
+        return properties
+    }
+    
+    /**
+     * Load property value or return null
+     */
+    fun loadProperty(filename: String, key: String): String? {
+        return try {
+            loadProperties(filename).getProperty(key)
+        } catch (e: Exception) {
+            null
+        }
+    }
+    
+    /**
+     * Load property value or throw exception
+     */
+    fun requireProperty(filename: String, key: String): String {
+        return loadProperty(filename, key)
+            ?: throw IllegalStateException("Required property '$key' not found in $filename")
+    }
     /**
      * Find a tool by name
      */

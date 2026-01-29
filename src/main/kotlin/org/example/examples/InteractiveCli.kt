@@ -15,9 +15,14 @@ fun main() = runBlocking {
     println("║   Interactive MCP Client CLI           ║")
     println("╚════════════════════════════════════════╝\n")
 
-    val apiKey = System.getenv("CONTEXT7_API_KEY") ?: run {
+    // Try to load API key from local.properties, fallback to user input
+    val apiKey = McpUtils.loadProperty("local.properties", "CONTEXT7_API_KEY") ?: run {
+        println("⚠ local.properties not found or CONTEXT7_API_KEY not set")
         print("Enter CONTEXT7_API_KEY: ")
-        readLine()?.takeIf { it.isNotBlank() } ?: "YOUR_API_KEY"
+        readLine()?.takeIf { it.isNotBlank() } ?: run {
+            System.err.println("✗ API key is required")
+            return@runBlocking
+        }
     }
 
     val config = McpConfig(
@@ -25,7 +30,7 @@ fun main() = runBlocking {
         headers = mapOf("CONTEXT7_API_KEY" to apiKey)
     )
 
-    val client = McpClient(config, "InteractiveCLI", "1.0.0", debug = false)
+    val client = McpClient(config, "InteractiveCLI", "1.0.0",)
 
     try {
         // Initialize

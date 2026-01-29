@@ -33,6 +33,27 @@
 
 ## Конфигурация
 
+### Способ 1: Файл local.properties (рекомендуется)
+
+Создайте файл `local.properties` в корне проекта:
+
+```properties
+# Local configuration file
+CONTEXT7_API_KEY=your_actual_api_key_here
+```
+
+Файл `local.properties` уже добавлен в `.gitignore`, поэтому ваши API ключи не попадут в git.
+
+Все примеры автоматически загружают токен из этого файла:
+
+```kotlin
+import org.example.mcp.McpUtils
+
+val apiKey = McpUtils.requireProperty("local.properties", "CONTEXT7_API_KEY")
+```
+
+### Способ 2: Конфигурационный файл JSON
+
 Пример конфигурации для подключения к Context7:
 
 ```json
@@ -56,13 +77,17 @@
 import kotlinx.coroutines.runBlocking
 import org.example.mcp.McpClient
 import org.example.mcp.McpConfig
+import org.example.mcp.McpUtils
 
 fun main() = runBlocking {
+    // Загружаем API ключ из local.properties
+    val apiKey = McpUtils.requireProperty("local.properties", "CONTEXT7_API_KEY")
+    
     // Создаем конфигурацию
     val config = McpConfig(
         url = "https://mcp.context7.com/mcp",
         headers = mapOf(
-            "CONTEXT7_API_KEY" to "YOUR_API_KEY"
+            "CONTEXT7_API_KEY" to apiKey
         )
     )
 

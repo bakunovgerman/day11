@@ -13,14 +13,22 @@ import org.example.mcp.McpUtils
 fun main() = runBlocking {
     println("=== Batch Operations MCP Client Example ===\n")
 
+    // Load API key from local.properties
+    val apiKey = try {
+        McpUtils.requireProperty("local.properties", "CONTEXT7_API_KEY")
+    } catch (e: Exception) {
+        System.err.println("Error: ${e.message}")
+        return@runBlocking
+    }
+
     val config = McpConfig(
         url = "https://mcp.context7.com/mcp",
         headers = mapOf(
-            "CONTEXT7_API_KEY" to (System.getenv("CONTEXT7_API_KEY") ?: "YOUR_API_KEY")
+            "CONTEXT7_API_KEY" to apiKey
         )
     )
 
-    val client = McpClient(config, debug = true)
+    val client = McpClient(config)
 
     try {
         // Initialize
