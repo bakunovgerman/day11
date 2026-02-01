@@ -16,12 +16,9 @@ fun main() = runBlocking {
         return@runBlocking
     }
 
-    // Configuration for Context7 MCP server
     val config = McpConfig(
-        url = "https://mcp.context7.com/mcp",
-        headers = mapOf(
-            "CONTEXT7_API_KEY" to apiKey,
-        )
+        url = "https://fittable-deeanna-noneditorially.ngrok-free.dev/mcp",
+        headers = mapOf()
     )
 
     val client = McpClient(config)
